@@ -1,0 +1,1 @@
+python train.py task=ShadowHand test=True 'checkpoint="/home/naoki/IsaacGymEnvs/isaacgymenvs/runs/ShadowHand/nn/last_ShadowHandep2rew[-12.81].pth"' num_envs=1

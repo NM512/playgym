@@ -51,6 +51,7 @@ from isaacgymenvs.learning import amp_players
 from isaacgymenvs.learning import amp_models
 from isaacgymenvs.learning import amp_network_builder
 
+from isaacgymenvs.utils.wrappers import TestAction
 
 ## OmegaConf & Hydra Config
 
@@ -80,7 +81,7 @@ def launch_rlg_hydra(cfg: DictConfig):
 
     # `create_rlgpu_env` is environment construction function which is passed to RL Games and called internally.
     # We use the helper function here to specify the environment config.
-    create_rlgpu_env = get_rlgames_env_creator(
+    original_create_rlgpu_env = get_rlgames_env_creator(
         omegaconf_to_dict(cfg.task),
         cfg.task_name,
         cfg.sim_device,
@@ -89,7 +90,7 @@ def launch_rlg_hydra(cfg: DictConfig):
         cfg.headless,
         multi_gpu=cfg.multi_gpu,
     )
-
+    create_rlgpu_env = lambda :TestAction(original_create_rlgpu_env())
     # register the rl-games adapter to use inside the runner
     vecenv.register('RLGPU',
                     lambda config_name, num_actors, **kwargs: RLGPUEnv(config_name, num_actors, **kwargs))
